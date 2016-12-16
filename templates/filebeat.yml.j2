@@ -107,7 +107,11 @@ output:
 
 {% if filebeat_ssl_certificate_file and filebeat_ssl_key_file %}
     # Optional TLS. By default is off.
+    {% if filebeat_version == '2.x' %}
     tls:
+    {% else %}
+    ssl:
+    {% endif %}
       # List of root certificates for HTTPS server verifications
       #certificate_authorities: ["/etc/pki/root/ca.pem"]
 
@@ -115,7 +119,11 @@ output:
       certificate: "{{ filebeat_ssl_dir }}/{{ filebeat_ssl_certificate_file | basename }}"
 
       # Client Certificate Key
+      {% if filebeat_version == '2.x' %}
       certificate_key: "{{ filebeat_ssl_dir }}/{{ filebeat_ssl_key_file | basename}}"
+      {% else %}
+      key: "{{ filebeat_ssl_dir }}/{{ filebeat_ssl_key_file | basename}}"
+      {% endif %}
 
       # Controls whether the client verifies server certificates and host name.
       # If insecure is set to true, all server host names and certificates will be
